@@ -16,13 +16,8 @@ FROM alpine:latest AS prod
 WORKDIR /app
 
 COPY --from=build /app/server /app/server
-COPY --from=build /app/files /app/files
-COPY --from=build /app/statics /app/statics
 
-EXPOSE 8090
 EXPOSE 8888
-
 RUN chmod +x ./server
-RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /output && mkdir -p /case && mkdir -p /result
 
 ENTRYPOINT ["/app/server"]
