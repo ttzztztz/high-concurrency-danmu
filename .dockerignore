@@ -1,0 +1,9 @@
+/.idea
+/target
+/files/avatar/*.avatar
+/files/judge/**/*.in
+/files/judge/**/*.out
+/files/submission/**/*.code
+/files/submission/**/*.code.o
+/files/submission/**/*.code.result
+/files/storage.json
