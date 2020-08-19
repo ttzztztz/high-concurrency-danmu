@@ -1,0 +1,3 @@
+{
+  "mysql": "root:abcdefg@tcp(localhost:3306)/danmu?&parseTime=True&loc=Local"
+}
