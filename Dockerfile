@@ -1,4 +1,4 @@
-# build stage
+# build go stage
 FROM golang:latest AS build
 WORKDIR /app
 
@@ -11,13 +11,24 @@ ENV GOOS=linux
 COPY . .
 RUN go build -o ./server . && chmod +x ./server
 
+# build fed stage
+FROM node:latest AS buildFed
+
+WORKDIR /app
+
+COPY . .
+RUN cd ./frontend && yarn && yarn build
+
 # prod stage
 FROM alpine:latest AS prod
 WORKDIR /app
 
 COPY --from=build /app/server /app/server
+RUN mkdir -p /app/frontend/build
+COPY --from=buildFed /app/frontend/build /app/server/frontend/build
 
 EXPOSE 8888
+EXPOSE 8889
 RUN chmod +x ./server
 
 ENTRYPOINT ["/app/server"]
