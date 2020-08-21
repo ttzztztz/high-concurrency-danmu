@@ -16,3 +16,6 @@
 config.json
 **/.DS_Store
 ./run_args.txt
+
+node_modules/
+/.vscode

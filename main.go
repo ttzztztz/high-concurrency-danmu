@@ -9,6 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func serverFrontend() {
+	fed := gin.Default()
+	fed.Static("/", "./frontend/build")
+	err := fed.Run(":8889")
+	if err != nil {
+		fmt.Println("err")
+	}
+}
+
 func main() {
 	initialize.Config()
 
@@ -16,6 +25,7 @@ func main() {
 	server.Use(middlewares.Cors())
 	user.Router(server)
 
+	go serverFrontend()
 	err := server.Run(":8888")
 	if err != nil {
 		fmt.Println(err)
