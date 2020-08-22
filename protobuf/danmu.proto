@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package protobuf;
+
+message DanmuIdRequest {
+  uint32 id = 1;
+}
+
+message DanmuUIdRequest {
+  uint32 uid = 1;
+}
+
+message DanmuRoomIdRequest {
+  uint32 room_id = 1;
+}
+
+message DanmuUIdAndRoomIdRequest {
+  uint32 uid = 1;
+  uint32 room_id = 2;
+}
+
+message DanmuResponse {
+  message Result {
+    bool visiable = 1;
+    string content = 2;
+  }
+  repeated Result danmu_list = 1;
+  double time_used = 2;
+}
+
+service DanmuService {
+  rpc GetDanmuById (DanmuIdRequest) returns (DanmuResponse);
+  rpc GetDanmuByUId (DanmuUIdRequest) returns (DanmuResponse);
+  rpc GetDanmuByRoomId (DanmuRoomIdRequest) returns (DanmuResponse);
+  rpc GetDanmuByUIdAndRoomId (DanmuUIdAndRoomIdRequest) returns (DanmuResponse);
+}
