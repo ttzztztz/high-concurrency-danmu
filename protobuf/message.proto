@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package protobuf;
+
+message SomeRequest {
+    uint32 a = 1;
+}
+
+message SomeResponse {
+    uint32 a = 1;
+}
+
+service SomeService {
+    rpc SomeFunctionName (SomeRequest) returns (SomeResponse);
+}
