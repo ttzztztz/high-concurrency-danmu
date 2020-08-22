@@ -16,3 +16,7 @@ func DefaultAvatarPath() (string, error) {
 func ConfigFilePath() (string, error) {
 	return filepath.Abs("./config.json")
 }
+
+func SensitiveWordPath() (string, error) {
+	return filepath.Abs("./statics/sensitive.txt")
+}
