@@ -13,10 +13,6 @@ message RoomInfoRequest {
   int64 flow = 3;
 }
 
-message FlowRequest {
-  int64 flow = 1;
-}
-
 message RoomResponse{
   bool status = 1;
   uint32 room_id = 2;
@@ -33,6 +29,6 @@ message ChangeResponse {
 service RoomService{
   rpc GetRoom(RoomRequest) returns (RoomResponse);
   rpc AddRoom(RoomInfoRequest) returns (ChangeResponse); //添加房间
-  rpc UpdateFlow(FlowRequest) returns (ChangeResponse); //更新房间流量
-  rpc RemoveFlow(RoomRequest) returns (ChangeResponse); //删除房间
+  rpc UpdateFlow(RoomInfoRequest) returns (ChangeResponse); //更新房间流量
+  rpc RemoveRoom(RoomRequest) returns (ChangeResponse); //删除房间
 }
