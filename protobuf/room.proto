@@ -7,14 +7,32 @@ message RoomRequest{
   uint32 creator_id = 2;
 }
 
+message RoomInfoRequest {
+  uint32 room_id = 1;
+  uint32 creator_id = 2;
+  int64 flow = 3;
+}
+
+message FlowRequest {
+  int64 flow = 1;
+}
+
 message RoomResponse{
   bool status = 1;
   uint32 room_id = 2;
   uint32 creator_id = 3;
   int64 flow = 4;
-  uint32 time_used = 5;
+  int64 time_used = 5;
+}
+
+message ChangeResponse {
+  bool status = 1;
+  uint32 num = 2;
 }
 
 service RoomService{
   rpc GetRoom(RoomRequest) returns (RoomResponse);
+  rpc AddRoom(RoomInfoRequest) returns (ChangeResponse); //添加房间
+  rpc UpdateFlow(FlowRequest) returns (ChangeResponse); //更新房间流量
+  rpc RemoveFlow(RoomRequest) returns (ChangeResponse); //删除房间
 }

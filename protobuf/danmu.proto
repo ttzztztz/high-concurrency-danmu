@@ -19,13 +19,25 @@ message DanmuUIdAndRoomIdRequest {
   uint32 room_id = 2;
 }
 
+message DanmuRequest {
+  uint32 id = 1;
+  uint32 uid = 2;
+  uint32 room_id = 3;
+  string content = 4;
+}
+
 message DanmuResponse {
   message Result {
     bool visiable = 1;
     string content = 2;
   }
-  repeated Result danmu_list = 1;
-  double time_used = 2;
+  bool status = 1;
+  repeated Result danmu_list = 2;
+  int64 time_used = 3;
+}
+
+message DanmuChangeResponse {
+  bool status = 1;
 }
 
 service DanmuService {
@@ -33,4 +45,6 @@ service DanmuService {
   rpc GetDanmuByUId (DanmuUIdRequest) returns (DanmuResponse);
   rpc GetDanmuByRoomId (DanmuRoomIdRequest) returns (DanmuResponse);
   rpc GetDanmuByUIdAndRoomId (DanmuUIdAndRoomIdRequest) returns (DanmuResponse);
+
+  rpc AddDanmu (DanmuRequest) returns (DanmuChangeResponse);
 }
