@@ -27,7 +27,7 @@ message RoomResponse{
 
 message ChangeResponse {
   bool status = 1;
-  uint32 num = 2;
+  int64 num = 2;
 }
 
 service RoomService{
