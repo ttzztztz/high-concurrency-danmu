@@ -25,6 +25,8 @@ func Send(c *gin.Context) {
 			"code":    400,
 			"message": "含有敏感词语！",
 		})
+
+		return
 	}
 
 	// do something...
