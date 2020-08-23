@@ -1,38 +1,33 @@
-.App {
-  text-align: center;
+.video {
+  background: black;
+  height: 600px;
+  width: 800px;
+  margin: 12px;
+  position: relative;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@keyframes danmu-animation {
+  0% {
+    left: 105%;
+  }
+  100% {
+    left: -5%;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.danmu-item {
+  position: absolute;
+  animation: danmu-animation;
+  animation-duration: 12800ms;
+  animation-timing-function: linear;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.danmu-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateZ(1);
+  overflow: hidden;
 }
