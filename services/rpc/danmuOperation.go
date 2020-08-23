@@ -1,3 +1,5 @@
+//support danmu query by {id, {uid}, {room_id}, {uid, room_id}}
+//support danmu adding, need danmu uid, room_id, content, visible
 package rpc
 
 import (
@@ -26,11 +28,10 @@ func (d *DanmuService) GetDanmuById(req protobuf.DanmuIdRequest, res *protobuf.D
 	end := time.Now()
 
 	timeUsed := end.Sub(start).Milliseconds()
-	res = &protobuf.DanmuResponse{
-		Status:    true,
-		DanmuList: retList,
-		TimeUsed:  timeUsed,
-	}
+
+	res.Status = true
+	res.DanmuList = retList
+	res.TimeUsed = timeUsed
 	return nil
 }
 
@@ -49,11 +50,9 @@ func (d *DanmuService) GetDanmuByUId(req protobuf.DanmuUIdRequest, res *protobuf
 	end := time.Now()
 
 	timeUsed := end.Sub(start).Milliseconds()
-	res = &protobuf.DanmuResponse{
-		Status:    true,
-		DanmuList: retList,
-		TimeUsed:  timeUsed,
-	}
+	res.Status = true
+	res.DanmuList = retList
+	res.TimeUsed = timeUsed
 	return nil
 }
 
@@ -72,15 +71,13 @@ func (d *DanmuService) GetDanmuByRoomId(req protobuf.DanmuRoomIdRequest, res *pr
 	end := time.Now()
 
 	timeUsed := end.Sub(start).Milliseconds()
-	res = &protobuf.DanmuResponse{
-		Status:    true,
-		DanmuList: retList,
-		TimeUsed:  timeUsed,
-	}
+	res.Status = true
+	res.DanmuList = retList
+	res.TimeUsed = timeUsed
 	return nil
 }
 
-func (d *DanmuService) GetDanmuByUIdAndRoomId(req protobuf.DanmuRoomIdRequest, res *protobuf.DanmuResponse) error {
+func (d *DanmuService) GetDanmuByUIdAndRoomId(req protobuf.DanmuUIdAndRoomIdRequest, res *protobuf.DanmuResponse) error {
 	var (
 		err error
 	)
@@ -95,11 +92,9 @@ func (d *DanmuService) GetDanmuByUIdAndRoomId(req protobuf.DanmuRoomIdRequest, r
 	end := time.Now()
 
 	timeUsed := end.Sub(start).Milliseconds()
-	res = &protobuf.DanmuResponse{
-		Status:    true,
-		DanmuList: retList,
-		TimeUsed:  timeUsed,
-	}
+	res.Status = true
+	res.DanmuList = retList
+	res.TimeUsed = timeUsed
 	return nil
 }
 
@@ -127,9 +122,7 @@ func (d *DanmuService) AddDanmu(req protobuf.DanmuRequest, res *protobuf.DanmuCh
 		return err
 	}
 
-	res = &protobuf.DanmuChangeResponse{
-		Status: true,
-	}
+	res.Status = true
 	return nil
 }
 
@@ -137,26 +130,26 @@ func query(req interface{}, danmuList *[]models.Danmu) error {
 	switch t := req.(type) {
 	case protobuf.DanmuIdRequest:
 		danmuId := t.Id
-		if err := db.DB.ID(danmuId).Find(&danmuList); err != nil {
+		if err := db.DB.ID(danmuId).Find(danmuList); err != nil {
 			fmt.Println(err)
 			return err
 		}
 	case protobuf.DanmuUIdRequest:
 		uid := t.Uid
-		if err := db.DB.Where("uid = ?", uid).Find(&danmuList); err != nil {
+		if err := db.DB.Where("u_id = ?", uid).Find(danmuList); err != nil {
 			fmt.Println(err)
 			return err
 		}
 	case protobuf.DanmuRoomIdRequest:
 		roomId := t.RoomId
-		if err := db.DB.Where("room_id = ?", roomId).Find(&danmuList); err != nil {
+		if err := db.DB.Where("room_id = ?", roomId).Find(danmuList); err != nil {
 			fmt.Println(err)
 			return err
 		}
 	case protobuf.DanmuUIdAndRoomIdRequest:
 		uid := t.Uid
 		roomId := t.RoomId
-		if err := db.DB.Where("uid = ? and room_id = ?", uid, roomId).Find(&danmuList); err != nil {
+		if err := db.DB.Where("u_id = ? and room_id = ?", uid, roomId).Find(danmuList); err != nil {
 			fmt.Println(err)
 			return err
 		}

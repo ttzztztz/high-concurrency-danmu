@@ -1,3 +1,5 @@
+//support crud for room, in GetRoom and UpdateRoom, there is a redundancy attribute: room_id
+//when you need these two services, only supply creator_id
 package rpc
 
 import (
@@ -14,22 +16,22 @@ func (s *RoomService) GetRoom(req protobuf.RoomRequest, res *protobuf.RoomRespon
 	start := time.Now()
 
 	roomId, creatorId := req.RoomId, req.CreatorId
+	fmt.Println(roomId, creatorId)
 	room := new(models.Room)
-	if _, err := db.DB.Where("room_id = ? and creator_id = ?", roomId, creatorId).Get(room); err != nil {
+	if _, err := db.DB.Where("id = ? and creator_id = ?", roomId, creatorId).Get(room); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
+	fmt.Println("查询通过")
 
 	end := time.Now()
 	timeUsed := end.Sub(start).Milliseconds()
 
-	res = &protobuf.RoomResponse{
-		Status:    true,
-		RoomId:    roomId,
-		CreatorId: creatorId,
-		Flow:      room.Flow,
-		TimeUsed:  timeUsed,
-	}
+	res.Status = true
+	res.RoomId = roomId
+	res.CreatorId = creatorId
+	res.Flow = room.Flow
+	res.TimeUsed = timeUsed
 	return nil
 }
 
@@ -53,10 +55,8 @@ func (s *RoomService) AddRoom(req protobuf.RoomInfoRequest, res *protobuf.Change
 		return err
 	}
 
-	res = &protobuf.ChangeResponse{
-		Status: true,
-		Num:    num,
-	}
+	res.Status = true
+	res.Num = num
 	return nil
 }
 
@@ -75,15 +75,13 @@ func (s *RoomService) UpdateFlow(req protobuf.RoomInfoRequest, res *protobuf.Cha
 		CreatorId: cId,
 		Flow:      flow,
 	}
-	if num, err = db.DB.Where("room_id = ? and creator_id = ?", rId, cId).Update(&room); err != nil {
+	if num, err = db.DB.Where("creator_id = ?", cId).Update(&room); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 
-	res = &protobuf.ChangeResponse{
-		Status: true,
-		Num:    num,
-	}
+	res.Status = true
+	res.Num = num
 	return nil
 }
 
@@ -93,16 +91,14 @@ func (s *RoomService) RemoveRoom(req protobuf.RoomRequest, res *protobuf.ChangeR
 		err error
 	)
 
-	roomId, creatorId := req.RoomId, req.CreatorId
+	creatorId := req.CreatorId
 	var user models.User
-	if num, err = db.DB.Where("room_id = ? and creator_id = ?", roomId, creatorId).Delete(&user); err != nil {
+	if num, err = db.DB.Where("creator_id = ?", creatorId).Delete(&user); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 
-	res = &protobuf.ChangeResponse{
-		Status: true,
-		Num:    num,
-	}
+	res.Status = true
+	res.Num = num
 	return nil
 }
