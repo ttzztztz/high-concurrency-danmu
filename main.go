@@ -4,7 +4,6 @@ import (
 	"danmu/controllers/danmu"
 	"danmu/controllers/user"
 	"danmu/middlewares"
-	"danmu/services/initialize"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +19,6 @@ func serverFrontend() {
 }
 
 func main() {
-	initialize.Config()
-
 	server := gin.Default()
 	server.Use(middlewares.Cors())
 	user.Router(server)
