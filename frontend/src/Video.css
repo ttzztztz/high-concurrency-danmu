@@ -1,0 +1,59 @@
+.video {
+  background: black;
+  height: 600px;
+  width: 800px;
+  margin: 12px;
+  position: relative;
+}
+
+@keyframes danmu-animation {
+  0% {
+    left: 102.5%;
+  }
+  100% {
+    left: -2.5%;
+  }
+}
+
+.danmu-item {
+  position: absolute;
+  animation: danmu-animation;
+  animation-duration: 12800ms;
+  animation-timing-function: linear;
+  text-shadow: rgba(0, 0, 0, 0.6) 1px 0 10px;
+}
+
+.danmu-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  will-change: transform;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.video-component {
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.form-control {
+  width: 100%;
+}
+
+.send-danmu-container {
+  margin: 24px 12px;
+}
+
+.danmu-switcher-container {
+  display: flex;
+  margin: 24px 12px;
+  justify-content: space-between;
+}

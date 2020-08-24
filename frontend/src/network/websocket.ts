@@ -4,7 +4,8 @@ import { IDanmuData } from "../types/type";
 export const connectToWebsocket = (
   uid: number,
   rid: number,
-  danmuHandler: (data: IDanmuData) => any
+  danmuHandler: (data: IDanmuData) => any,
+  errHandler: (data: any) => any
 ) => {
   const url = `${getOneServer().replace(/^http/, "ws")}ws/${uid}/${rid}`;
   const socket = new WebSocket(url);
@@ -20,6 +21,7 @@ export const connectToWebsocket = (
 
   socket.onerror = (err: any) => {
     console.error("socket err", err);
+    errHandler(err)
   };
 
   return socket;
