@@ -4,12 +4,16 @@ import { IDanmuItem, IDanmuBroadCastItem } from "./types/type";
 import { sendDanmuToServer } from "./network/sendDanmu";
 import { connectToWebsocket } from "./network/websocket";
 
-const VIDRO_URL = 'https://s1.pstatp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4'
+const VIDRO_URL =
+  "https://s1.pstatp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4";
 
 class App extends React.Component {
   state = {
     danmuContent: "",
     danmuColor: "#ff0000",
+
+    uid: "1",
+    rid: "1",
   };
   danmuContainerRef: HTMLDivElement | null = null;
 
@@ -28,17 +32,12 @@ class App extends React.Component {
     console.log("added ", danmu);
   };
 
-  handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newVal = event.target.value;
     this.setState({
-      danmuContent: newVal,
-    });
-  };
-
-  handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = event.target.value;
-    this.setState({
-      danmuColor: newVal,
+      [key]: newVal,
     });
   };
 
@@ -59,29 +58,30 @@ class App extends React.Component {
 
   socket: WebSocket | null = null;
 
+  openWs = () => {
+    const { uid, rid } = this.state;
+    this.socket = connectToWebsocket(+uid, +rid, (data) => {
+      this.addDanmu(data)
+    });
+    console.log("new ws", this.socket);
+  };
+
   componentWillUnmount() {
     this.socket?.close();
-    console.log('close ws')
+    console.log("close ws");
   }
 
   componentDidMount() {
-    this.socket = connectToWebsocket(1, 1, (data) => {
-      console.log(data);
-    });
-    console.log('new ws', this.socket)
+    // this.openWs();
   }
 
   render() {
-    const { danmuContent, danmuColor } = this.state;
+    const { danmuContent, danmuColor, uid, rid } = this.state;
 
     return (
       <div className="App">
         <div className="video">
-          <video
-            controls
-            className="video-component"
-            src={VIDRO_URL}
-          ></video>
+          <video controls className="video-component" src={VIDRO_URL}></video>
           <div
             className="danmu-container"
             id="danmu-container"
@@ -91,17 +91,24 @@ class App extends React.Component {
           ></div>
         </div>
 
-        <input
-          type="text"
-          onChange={this.handleContentChange}
-          value={danmuContent}
-        />
-        <input
-          type="color"
-          onChange={this.handleColorChange}
-          value={danmuColor}
-        />
-        <button onClick={this.sendDanmu}>send danmu</button>
+        <div>
+          <input
+            type="text"
+            onChange={this.handleChange("danmuContent")}
+            value={danmuContent}
+          />
+          <input
+            type="color"
+            onChange={this.handleChange("danmuColor")}
+            value={danmuColor}
+          />
+          <button onClick={this.sendDanmu}>send danmu</button>
+        </div>
+        <div>
+          <input type="text" onChange={this.handleChange("uid")} value={uid} />
+          <input type="text" onChange={this.handleChange("rid")} value={rid} />
+          <button onClick={this.openWs}>open ws</button>
+        </div>
       </div>
     );
   }

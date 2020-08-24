@@ -180,7 +180,7 @@ func (h *DanmuHub) Run() {
 			}
 
 			for _, item := range h.clients {
-				if item.rid == broadcast.Rid && item.uid != broadcast.Uid {
+				if item.rid == broadcast.Rid {
 					item.send <- jsonByte
 				}
 			}

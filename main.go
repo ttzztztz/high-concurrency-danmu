@@ -5,6 +5,7 @@ import (
 	"danmu/controllers/user"
 	"danmu/controllers/ws"
 	"danmu/middlewares"
+	"danmu/services/kafka"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -28,6 +29,7 @@ func main() {
 	ws.WebSocket(server)
 
 	go serverFrontend()
+	kafka.CreateMessageConsumer([]string{"danmu"}, "1")
 	err := server.Run(":8888")
 	if err != nil {
 		fmt.Println(err)
