@@ -12,6 +12,8 @@ func TestProducer(t *testing.T) {
 	CreateMessageConsumer([]string{"danmu"}, "1")
 	CreateMessageConsumer([]string{"danmu"}, "2")
 	CreateMessageConsumer([]string{"danmu"}, "3")
+
+	CreateDatabaseConsumer([]string{"danmu"})
 	CreateDatabaseConsumer([]string{"danmu"})
 
 	done := make(chan bool)
@@ -20,10 +22,10 @@ func TestProducer(t *testing.T) {
 			fmt.Println("publishing msg")
 
 			testMsg := &protobuf.DanmuInternalMessage{
-				Id:      1,
 				Uid:     2,
 				Rid:     3,
 				Content: "22222",
+				Color:   "red",
 			}
 			buf, _ := proto.Marshal(testMsg)
 

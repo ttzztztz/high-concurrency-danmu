@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
+import { IDanmuItem, IDanmuBroadCastItem } from "./types/type";
+import { sendDanmuToServer } from "./network/sendDanmu";
+import { connectToWebsocket } from "./network/websocket";
 
-interface IDanmuItem {
-  id: string;
-  content: string;
-  color: string;
-}
+const VIDRO_URL = 'https://s1.pstatp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4'
 
 class App extends React.Component {
   state = {
-    danmuContent: '',
-    danmuColor: 'red'
-  }
+    danmuContent: "",
+    danmuColor: "#ff0000",
+  };
   danmuContainerRef: HTMLDivElement | null = null;
 
-  addDanmu = (danmu: IDanmuItem) => {
-    const danmuNode = document.createElement("div")
+  addDanmu = (danmu: IDanmuBroadCastItem) => {
+    const danmuNode = document.createElement("div");
     danmuNode.classList.add("danmu-item");
     danmuNode.onanimationend = () => {
       console.log("removed ", danmu);
@@ -23,25 +22,25 @@ class App extends React.Component {
     };
     danmuNode.style.transform = `translateY(${~~(Math.random() * 550)}px)`;
     danmuNode.style.color = danmu.color;
-    danmuNode.innerText = danmu.content
+    danmuNode.innerText = danmu.content;
     this.danmuContainerRef?.appendChild(danmuNode);
 
-    console.log("added ", danmu)
-  }
+    console.log("added ", danmu);
+  };
 
   handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = event.target.value
+    const newVal = event.target.value;
     this.setState({
-      danmuContent: newVal
-    })
-  }
+      danmuContent: newVal,
+    });
+  };
 
   handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = event.target.value
+    const newVal = event.target.value;
     this.setState({
-      danmuColor: newVal
-    })
-  }
+      danmuColor: newVal,
+    });
+  };
 
   sendDanmu = () => {
     const danmu: IDanmuItem = {
@@ -49,9 +48,28 @@ class App extends React.Component {
       content: this.state.danmuContent,
       color: this.state.danmuColor,
     };
-    this.addDanmu(danmu);
+
+    sendDanmuToServer({
+      ...danmu,
+      uid: 1,
+      rid: 1,
+    });
     console.log("send danmu", danmu);
   };
+
+  socket: WebSocket | null = null;
+
+  componentWillUnmount() {
+    this.socket?.close();
+    console.log('close ws')
+  }
+
+  componentDidMount() {
+    this.socket = connectToWebsocket(1, 1, (data) => {
+      console.log(data);
+    });
+    console.log('new ws', this.socket)
+  }
 
   render() {
     const { danmuContent, danmuColor } = this.state;
@@ -59,6 +77,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="video">
+          <video
+            controls
+            className="video-component"
+            src={VIDRO_URL}
+          ></video>
           <div
             className="danmu-container"
             id="danmu-container"
@@ -67,9 +90,17 @@ class App extends React.Component {
             }}
           ></div>
         </div>
-        
-        <input type="text" onChange={this.handleContentChange} value={danmuContent}/>
-        <input type="text" onChange={this.handleColorChange} value={danmuColor}/>
+
+        <input
+          type="text"
+          onChange={this.handleContentChange}
+          value={danmuContent}
+        />
+        <input
+          type="color"
+          onChange={this.handleColorChange}
+          value={danmuColor}
+        />
         <button onClick={this.sendDanmu}>send danmu</button>
       </div>
     );

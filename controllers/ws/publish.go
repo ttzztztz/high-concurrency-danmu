@@ -1,4 +1,4 @@
-package websocket
+package ws
 
 import (
 	"danmu/protobuf"
@@ -15,4 +15,10 @@ func PublishDanmu(buf []byte) {
 	}
 
 	fmt.Printf("%+v will publish danmu \n", message)
+	SocketHub.DanmuHub.Broadcast <- &HubBroadcast{
+		Content: message.Content,
+		Color:   message.Color,
+		Uid:     message.Uid,
+		Rid:     message.Rid,
+	}
 }

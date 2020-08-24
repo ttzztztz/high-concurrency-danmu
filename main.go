@@ -3,6 +3,7 @@ package main
 import (
 	"danmu/controllers/danmu"
 	"danmu/controllers/user"
+	"danmu/controllers/ws"
 	"danmu/middlewares"
 	"fmt"
 
@@ -21,8 +22,10 @@ func serverFrontend() {
 func main() {
 	server := gin.Default()
 	server.Use(middlewares.Cors())
+
 	user.Router(server)
 	danmu.Router(server)
+	ws.WebSocket(server)
 
 	go serverFrontend()
 	err := server.Run(":8888")

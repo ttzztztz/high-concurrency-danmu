@@ -7,5 +7,5 @@ import (
 func Router(baseRouter *gin.Engine) {
 	danmuRouter := baseRouter.Group("/danmu")
 
-	danmuRouter.POST("/Send", Send)
+	danmuRouter.POST("/send", Send)
 }
