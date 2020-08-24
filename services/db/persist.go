@@ -25,7 +25,7 @@ func PersistDanmu(buf []byte) {
 		Color:   message.Color,
 	}
 
-	ds := rpc.DanmuService{}
+	ds := &rpc.DanmuService{}
 	res := &protobuf.DanmuChangeResponse{}
 	err = ds.AddDanmu(danmuRequest, res)
 	if err != nil {
