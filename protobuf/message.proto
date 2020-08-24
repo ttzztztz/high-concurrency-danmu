@@ -2,14 +2,9 @@ syntax = "proto3";
 
 package protobuf;
 
-message SomeRequest {
-    uint32 a = 1;
-}
-
-message SomeResponse {
-    uint32 a = 1;
-}
-
-service SomeService {
-    rpc SomeFunctionName (SomeRequest) returns (SomeResponse);
+message DanmuInternalMessage {
+    uint32 id = 1;
+    uint32 uid = 2;
+    uint32 rid = 3;
+    string content = 4;
 }

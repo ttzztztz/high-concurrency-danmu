@@ -20,100 +20,84 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type SomeRequest struct {
-	A                    uint32   `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
+type DanmuInternalMessage struct {
+	Id                   uint32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Uid                  uint32   `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	Rid                  uint32   `protobuf:"varint,3,opt,name=rid,proto3" json:"rid,omitempty"`
+	Content              string   `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SomeRequest) Reset()         { *m = SomeRequest{} }
-func (m *SomeRequest) String() string { return proto.CompactTextString(m) }
-func (*SomeRequest) ProtoMessage()    {}
-func (*SomeRequest) Descriptor() ([]byte, []int) {
+func (m *DanmuInternalMessage) Reset()         { *m = DanmuInternalMessage{} }
+func (m *DanmuInternalMessage) String() string { return proto.CompactTextString(m) }
+func (*DanmuInternalMessage) ProtoMessage()    {}
+func (*DanmuInternalMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8368f5d77b0b9b7b, []int{0}
 }
 
-func (m *SomeRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SomeRequest.Unmarshal(m, b)
+func (m *DanmuInternalMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DanmuInternalMessage.Unmarshal(m, b)
 }
-func (m *SomeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SomeRequest.Marshal(b, m, deterministic)
+func (m *DanmuInternalMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DanmuInternalMessage.Marshal(b, m, deterministic)
 }
-func (m *SomeRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SomeRequest.Merge(m, src)
+func (m *DanmuInternalMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DanmuInternalMessage.Merge(m, src)
 }
-func (m *SomeRequest) XXX_Size() int {
-	return xxx_messageInfo_SomeRequest.Size(m)
+func (m *DanmuInternalMessage) XXX_Size() int {
+	return xxx_messageInfo_DanmuInternalMessage.Size(m)
 }
-func (m *SomeRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_SomeRequest.DiscardUnknown(m)
+func (m *DanmuInternalMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_DanmuInternalMessage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SomeRequest proto.InternalMessageInfo
+var xxx_messageInfo_DanmuInternalMessage proto.InternalMessageInfo
 
-func (m *SomeRequest) GetA() uint32 {
+func (m *DanmuInternalMessage) GetId() uint32 {
 	if m != nil {
-		return m.A
+		return m.Id
 	}
 	return 0
 }
 
-type SomeResponse struct {
-	A                    uint32   `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *SomeResponse) Reset()         { *m = SomeResponse{} }
-func (m *SomeResponse) String() string { return proto.CompactTextString(m) }
-func (*SomeResponse) ProtoMessage()    {}
-func (*SomeResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8368f5d77b0b9b7b, []int{1}
-}
-
-func (m *SomeResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SomeResponse.Unmarshal(m, b)
-}
-func (m *SomeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SomeResponse.Marshal(b, m, deterministic)
-}
-func (m *SomeResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SomeResponse.Merge(m, src)
-}
-func (m *SomeResponse) XXX_Size() int {
-	return xxx_messageInfo_SomeResponse.Size(m)
-}
-func (m *SomeResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_SomeResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_SomeResponse proto.InternalMessageInfo
-
-func (m *SomeResponse) GetA() uint32 {
+func (m *DanmuInternalMessage) GetUid() uint32 {
 	if m != nil {
-		return m.A
+		return m.Uid
 	}
 	return 0
+}
+
+func (m *DanmuInternalMessage) GetRid() uint32 {
+	if m != nil {
+		return m.Rid
+	}
+	return 0
+}
+
+func (m *DanmuInternalMessage) GetContent() string {
+	if m != nil {
+		return m.Content
+	}
+	return ""
 }
 
 func init() {
-	proto.RegisterType((*SomeRequest)(nil), "protobuf.SomeRequest")
-	proto.RegisterType((*SomeResponse)(nil), "protobuf.SomeResponse")
+	proto.RegisterType((*DanmuInternalMessage)(nil), "protobuf.DanmuInternalMessage")
 }
 
 func init() { proto.RegisterFile("protobuf/message.proto", fileDescriptor_8368f5d77b0b9b7b) }
 
 var fileDescriptor_8368f5d77b0b9b7b = []byte{
-	// 140 bytes of a gzipped FileDescriptorProto
+	// 134 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2b, 0x28, 0xca, 0x2f,
 	0xc9, 0x4f, 0x2a, 0x4d, 0xd3, 0xcf, 0x4d, 0x2d, 0x2e, 0x4e, 0x4c, 0x4f, 0xd5, 0x03, 0x0b, 0x08,
-	0x71, 0xc0, 0xc4, 0x95, 0xa4, 0xb9, 0xb8, 0x83, 0xf3, 0x73, 0x53, 0x83, 0x52, 0x0b, 0x4b, 0x53,
-	0x8b, 0x4b, 0x84, 0x78, 0xb8, 0x18, 0x13, 0x25, 0x18, 0x15, 0x18, 0x35, 0x78, 0x83, 0x18, 0x13,
-	0x95, 0x64, 0xb8, 0x78, 0x20, 0x92, 0xc5, 0x05, 0xf9, 0x79, 0xc5, 0xa9, 0xa8, 0xb2, 0x46, 0x01,
-	0x10, 0xad, 0xc1, 0xa9, 0x45, 0x65, 0x99, 0xc9, 0xa9, 0x42, 0x8e, 0x5c, 0x02, 0x20, 0xae, 0x5b,
-	0x69, 0x5e, 0x72, 0x49, 0x66, 0x7e, 0x9e, 0x5f, 0x62, 0x6e, 0xaa, 0x90, 0xa8, 0x1e, 0xcc, 0x22,
-	0x3d, 0x24, 0x5b, 0xa4, 0xc4, 0xd0, 0x85, 0x21, 0xe6, 0x27, 0xb1, 0x81, 0x85, 0x8d, 0x01, 0x01,
-	0x00, 0x00, 0xff, 0xff, 0x2d, 0x7a, 0xf6, 0xdc, 0xb7, 0x00, 0x00, 0x00,
+	0x71, 0xc0, 0xc4, 0x95, 0x52, 0xb8, 0x44, 0x5c, 0x12, 0xf3, 0x72, 0x4b, 0x3d, 0xf3, 0x4a, 0x52,
+	0x8b, 0xf2, 0x12, 0x73, 0x7c, 0x21, 0xea, 0x84, 0xf8, 0xb8, 0x98, 0x32, 0x53, 0x24, 0x18, 0x15,
+	0x18, 0x35, 0x78, 0x83, 0x98, 0x32, 0x53, 0x84, 0x04, 0xb8, 0x98, 0x4b, 0x33, 0x53, 0x24, 0x98,
+	0xc0, 0x02, 0x20, 0x26, 0x48, 0xa4, 0x28, 0x33, 0x45, 0x82, 0x19, 0x22, 0x52, 0x94, 0x99, 0x22,
+	0x24, 0xc1, 0xc5, 0x9e, 0x9c, 0x9f, 0x57, 0x92, 0x9a, 0x57, 0x22, 0xc1, 0xa2, 0xc0, 0xa8, 0xc1,
+	0x19, 0x04, 0xe3, 0x26, 0xb1, 0x81, 0xed, 0x33, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xe2, 0x04,
+	0xfb, 0x76, 0x90, 0x00, 0x00, 0x00,
 }
