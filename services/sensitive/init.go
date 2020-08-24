@@ -3,6 +3,7 @@ package sensitive
 import (
 	"bytes"
 	"danmu/utils/files"
+	"strings"
 )
 
 func init() {
@@ -19,7 +20,11 @@ func init() {
 
 	acAutoMachine = NewAcAutoMachine()
 	for _, word := range allSensitiveWords {
-		acAutoMachine.AddPattern(word)
+		trimmedWord := strings.Trim(word, " ")
+
+		if len(trimmedWord) > 0 {
+			acAutoMachine.AddPattern(word)
+		}
 	}
 	acAutoMachine.Build()
 }

@@ -4,6 +4,7 @@ import (
 	"danmu/utils/files"
 	"encoding/json"
 	"io/ioutil"
+	"os"
 )
 
 var (
@@ -28,4 +29,10 @@ func ReadFile(config *GlobalConfigType) {
 	if err := json.Unmarshal(content, config); err != nil {
 		panic(err)
 	}
+}
+
+func init() {
+	Global = &GlobalConfigType{}
+	ReadFile(Global)
+	Secret = os.Getenv("Secret")
 }
