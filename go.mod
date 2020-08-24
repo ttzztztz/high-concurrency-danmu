@@ -11,5 +11,6 @@ require (
 	github.com/golang/protobuf v1.4.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/klauspost/compress v1.10.11 // indirect
+	google.golang.org/protobuf v1.22.0
 	xorm.io/xorm v1.0.3
 )

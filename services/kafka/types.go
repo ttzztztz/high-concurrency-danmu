@@ -2,7 +2,7 @@ package kafka
 
 import (
 	"danmu/controllers/ws"
-	"danmu/services/db"
+	"danmu/services/rpc"
 	"fmt"
 	"github.com/Shopify/sarama"
 )
@@ -45,7 +45,7 @@ func (consumer *DatabaseConsumer) Cleanup(sarama.ConsumerGroupSession) error {
 
 func (consumer *DatabaseConsumer) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for message := range claim.Messages() {
-		go db.PersistDanmu(message.Value)
+		go rpc.PersistDanmu(message.Value)
 		session.MarkMessage(message, "")
 	}
 

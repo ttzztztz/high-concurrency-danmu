@@ -1,8 +1,7 @@
-package db
+package rpc
 
 import (
 	"danmu/protobuf"
-	"danmu/services/rpc"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 )
@@ -25,7 +24,7 @@ func PersistDanmu(buf []byte) {
 		Color:   message.Color,
 	}
 
-	ds := &rpc.DanmuService{}
+	ds := &DanmuService{}
 	res := &protobuf.DanmuChangeResponse{}
 	err = ds.AddDanmu(danmuRequest, res)
 	if err != nil {
