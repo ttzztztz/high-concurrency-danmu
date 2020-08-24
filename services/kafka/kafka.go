@@ -9,6 +9,8 @@ var (
 	Version sarama.KafkaVersion
 	Broker  = []string{
 		"localhost:9092",
+		"localhost:9093",
+		"localhost:9094",
 	}
 	CancelCtx, CancelFunc = context.WithCancel(context.Background())
 )

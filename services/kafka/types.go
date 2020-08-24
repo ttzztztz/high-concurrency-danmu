@@ -3,6 +3,7 @@ package kafka
 import (
 	"danmu/services/db"
 	"danmu/services/websocket"
+	"fmt"
 	"github.com/Shopify/sarama"
 )
 
@@ -21,6 +22,7 @@ func (consumer *MessageConsumer) Cleanup(sarama.ConsumerGroupSession) error {
 
 func (consumer *MessageConsumer) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for message := range claim.Messages() {
+		fmt.Printf("%+v \n", message)
 		go websocket.PublishDanmu(message.Value)
 		session.MarkMessage(message, "")
 	}
