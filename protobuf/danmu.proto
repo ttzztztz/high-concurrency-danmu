@@ -25,6 +25,7 @@ message DanmuRequest {
   uint32 room_id = 3;
   bool visible = 4;
   string content = 5;
+  string color = 6;
 }
 
 message DanmuResponse {
