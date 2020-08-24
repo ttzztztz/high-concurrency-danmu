@@ -24,8 +24,8 @@ FROM alpine:latest AS prod
 WORKDIR /app
 
 COPY --from=build /app/server /app/server
-RUN mkdir -p /app/server/frontend/build
-COPY --from=buildFed /app/frontend/build /app/server/frontend/build
+RUN mkdir -p /app/frontend/build
+COPY --from=buildFed /app/frontend/build /app/frontend/build
 
 EXPOSE 8888
 EXPOSE 8889
