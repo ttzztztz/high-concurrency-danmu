@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Feb 27, 2020 at 09:07 AM
+-- Generation Time: Aug 24, 2020 at 08:35 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `danmu`
 --
-CREATE DATABASE IF NOT EXISTS `danmu` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `danmu`;
 
 -- --------------------------------------------------------
 
@@ -43,11 +41,19 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Indexes for dumped tables
+--
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`uid`),
   ADD UNIQUE KEY `username` (`username`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
 --
 -- AUTO_INCREMENT for table `user`

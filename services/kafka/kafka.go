@@ -23,5 +23,4 @@ func init() {
 	}
 
 	Producer()
-	CreateMessageConsumer([]string{"danmu"}, "1")
 }
