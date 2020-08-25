@@ -21,6 +21,7 @@ func serverFrontend() {
 }
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	server := gin.Default()
 	server.Use(middlewares.Cors())
 

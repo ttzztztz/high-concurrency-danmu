@@ -16,7 +16,11 @@ export const connectToWebsocket = (
 
   socket.onmessage = (message: any) => {
     const { data } = message;
-    danmuHandler(JSON.parse(data));
+    try {
+      danmuHandler(JSON.parse(data));
+    } catch (e) {
+      console.error(e, data)
+    }
   };
 
   socket.onerror = (err: any) => {
