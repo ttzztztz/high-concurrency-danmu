@@ -122,7 +122,6 @@ func ServeDanmuWs(danmuHub *DanmuHub) func(*gin.Context) {
 		}
 
 		client := &Client{
-			hub:  danmuHub,
 			conn: conn,
 			send: make(chan []byte, 256),
 			rid:  uint32(rid),
