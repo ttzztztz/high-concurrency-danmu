@@ -16,7 +16,6 @@ var (
 )
 
 type Client struct {
-	hub  *DanmuHub
 	conn *websocket.Conn
 	send chan []byte
 	uid  uint32
@@ -25,7 +24,7 @@ type Client struct {
 
 func (c *Client) readPump() {
 	defer func() {
-		c.hub.unregister <- c
+		danmuHub.unregister <- c
 		_ = c.conn.Close()
 	}()
 
