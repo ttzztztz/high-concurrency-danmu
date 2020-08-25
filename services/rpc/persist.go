@@ -14,8 +14,6 @@ func PersistDanmu(buf []byte) {
 		return
 	}
 
-	fmt.Printf("will persist danmu %+v \n", message)
-
 	danmuRequest := protobuf.DanmuRequest{
 		Uid:     message.Uid,
 		RoomId:  message.Rid,

@@ -14,7 +14,6 @@ func PublishDanmu(buf []byte) {
 		return
 	}
 
-	fmt.Printf("%+v will publish danmu \n", message)
 	SocketHub.DanmuHub.Broadcast <- &HubBroadcast{
 		Content: message.Content,
 		Color:   message.Color,

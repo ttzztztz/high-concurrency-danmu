@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -132,7 +133,10 @@ type HubBroadcastMessage struct {
 }
 
 type DanmuHub struct {
-	clients    map[uint32]*Client
+	clients map[*Client]bool
+	mu      sync.RWMutex
+
+	rooms      map[uint32]map[*Client]bool
 	Broadcast  chan *HubBroadcast
 	register   chan *Client
 	unregister chan *Client
@@ -140,7 +144,8 @@ type DanmuHub struct {
 
 func NewDanmuHub() *DanmuHub {
 	danmuHub = &DanmuHub{
-		clients:    make(map[uint32]*Client),
+		clients:    make(map[*Client]bool),
+		rooms:      make(map[uint32]map[*Client]bool),
 		Broadcast:  make(chan *HubBroadcast),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
@@ -149,41 +154,58 @@ func NewDanmuHub() *DanmuHub {
 	return danmuHub
 }
 
-func (h *DanmuHub) removeDanmuHubClient(uid uint32) {
-	if client, ok := h.clients[uid]; ok {
-		close(client.send)
-		delete(h.clients, uid)
+func (h *DanmuHub) removeDanmuHubClient(client *Client) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
+	delete(h.clients, client)
+	delete(h.rooms[client.rid], client)
+	if len(h.rooms[client.rid]) == 0 {
+		delete(h.rooms, client.rid)
 	}
+}
+
+func (h *DanmuHub) sendBroadCast(broadcast *HubBroadcast) {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
+	jsonByte, err := json.Marshal(HubBroadcastMessage{
+		Content: broadcast.Content,
+		Color:   broadcast.Color,
+	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	if _, ok := h.rooms[broadcast.Rid]; ok {
+		for client := range h.rooms[broadcast.Rid] {
+			client.send <- jsonByte
+		}
+	}
+}
+
+func (h *DanmuHub) joinClient(client *Client) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
+	h.clients[client] = true
+	if _, ok := h.rooms[client.rid]; !ok {
+		h.rooms[client.rid] = make(map[*Client]bool)
+	}
+	h.rooms[client.rid][client] = true
 }
 
 func (h *DanmuHub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			if _, ok := h.clients[client.uid]; ok {
-				close(h.clients[client.uid].send)
-				delete(h.clients, client.uid)
-			}
-
-			h.clients[client.uid] = client
+			go h.joinClient(client)
 		case client := <-h.unregister:
-			h.removeDanmuHubClient(client.uid)
+			go h.removeDanmuHubClient(client)
 		case broadcast := <-h.Broadcast:
-			jsonByte, err := json.Marshal(HubBroadcastMessage{
-				Content: broadcast.Content,
-				Color:   broadcast.Color,
-			})
-
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-
-			for _, item := range h.clients {
-				if item.rid == broadcast.Rid {
-					item.send <- jsonByte
-				}
-			}
+			go h.sendBroadCast(broadcast)
 		}
 	}
 }
