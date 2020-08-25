@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
 	"strconv"
 	"sync"
 	"time"
@@ -15,6 +16,7 @@ var (
 )
 
 type Client struct {
+	hub  *DanmuHub
 	conn *websocket.Conn
 	send chan []byte
 	uid  uint32
@@ -22,28 +24,41 @@ type Client struct {
 }
 
 func (c *Client) readPump() {
+	defer func() {
+		c.hub.unregister <- c
+		_ = c.conn.Close()
+	}()
+
 	c.conn.SetReadLimit(MaxMessageSize)
-	if err := c.conn.SetReadDeadline(time.Now().Add(PongWait)); err != nil {
-		fmt.Println(err)
-	}
+	_ = c.conn.SetReadDeadline(time.Now().Add(PongWait))
 	c.conn.SetPongHandler(func(string) error {
 		_ = c.conn.SetReadDeadline(time.Now().Add(PongWait))
 		return nil
 	})
+
+	for {
+		_, _, err := c.conn.ReadMessage()
+
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("error: %v", err)
+			}
+			break
+		}
+	}
 }
 
 func (c *Client) writePump() {
 	ticker := time.NewTicker(PingPeriod)
 	defer func() {
 		ticker.Stop()
+		_ = c.conn.Close()
 	}()
 
 	for {
 		select {
 		case message, ok := <-c.send:
-			if err := c.conn.SetWriteDeadline(time.Now().Add(WriteWait)); err != nil {
-				fmt.Println(err)
-			}
+			_ = c.conn.SetWriteDeadline(time.Now().Add(WriteWait))
 
 			if !ok {
 				if err := c.conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
@@ -85,7 +100,7 @@ func (c *Client) writePump() {
 	}
 }
 
-func ServeDanmuWs(contestHub *DanmuHub) func(*gin.Context) {
+func ServeDanmuWs(danmuHub *DanmuHub) func(*gin.Context) {
 	return func(c *gin.Context) {
 		_rid, _uid := c.Param("rid"), c.Param("uid")
 
@@ -108,12 +123,13 @@ func ServeDanmuWs(contestHub *DanmuHub) func(*gin.Context) {
 		}
 
 		client := &Client{
+			hub: danmuHub,
 			conn: conn,
 			send: make(chan []byte, 256),
 			rid:  uint32(rid),
 			uid:  uint32(uid),
 		}
-		contestHub.register <- client
+		danmuHub.register <- client
 
 		go client.writePump()
 		go client.readPump()
@@ -201,10 +217,13 @@ func (h *DanmuHub) Run() {
 	for {
 		select {
 		case client := <-h.register:
+			fmt.Printf("register %+v %d \n", *client, len(h.clients))
 			go h.joinClient(client)
 		case client := <-h.unregister:
+			fmt.Printf("client unregister %+v \n", *client)
 			go h.removeDanmuHubClient(client)
 		case broadcast := <-h.Broadcast:
+			fmt.Printf("broadcast %+v \n", *broadcast)
 			go h.sendBroadCast(broadcast)
 		}
 	}

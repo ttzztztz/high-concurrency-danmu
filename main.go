@@ -14,6 +14,7 @@ import (
 func serverFrontend() {
 	fed := gin.Default()
 	fed.Static("/", "./frontend/build")
+
 	err := fed.Run(":8889")
 	if err != nil {
 		fmt.Println("err")
