@@ -149,22 +149,20 @@ type HubBroadcastMessage struct {
 }
 
 type DanmuHub struct {
-	clients map[*Client]bool
-	mu      sync.RWMutex
-
-	rooms      map[uint32]map[*Client]bool
+	Rooms      map[uint32]map[*Client]bool
 	Broadcast  chan *HubBroadcast
 	register   chan *Client
 	unregister chan *Client
+
+	mu      sync.RWMutex
 }
 
 func NewDanmuHub() *DanmuHub {
 	danmuHub = &DanmuHub{
-		clients:    make(map[*Client]bool),
-		rooms:      make(map[uint32]map[*Client]bool),
-		Broadcast:  make(chan *HubBroadcast),
-		register:   make(chan *Client),
-		unregister: make(chan *Client),
+		Rooms:      make(map[uint32]map[*Client]bool),
+		Broadcast:  make(chan *HubBroadcast, 128),
+		register:   make(chan *Client, 128),
+		unregister: make(chan *Client, 128),
 	}
 
 	return danmuHub
@@ -174,10 +172,9 @@ func (h *DanmuHub) removeDanmuHubClient(client *Client) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	delete(h.clients, client)
-	delete(h.rooms[client.rid], client)
-	if len(h.rooms[client.rid]) == 0 {
-		delete(h.rooms, client.rid)
+	delete(h.Rooms[client.rid], client)
+	if len(h.Rooms[client.rid]) == 0 {
+		delete(h.Rooms, client.rid)
 	}
 }
 
@@ -195,8 +192,8 @@ func (h *DanmuHub) sendBroadCast(broadcast *HubBroadcast) {
 		return
 	}
 
-	if _, ok := h.rooms[broadcast.Rid]; ok {
-		for client := range h.rooms[broadcast.Rid] {
+	if _, ok := h.Rooms[broadcast.Rid]; ok {
+		for client := range h.Rooms[broadcast.Rid] {
 			client.send <- jsonByte
 		}
 	}
@@ -206,24 +203,20 @@ func (h *DanmuHub) joinClient(client *Client) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	h.clients[client] = true
-	if _, ok := h.rooms[client.rid]; !ok {
-		h.rooms[client.rid] = make(map[*Client]bool)
+	if _, ok := h.Rooms[client.rid]; !ok {
+		h.Rooms[client.rid] = make(map[*Client]bool)
 	}
-	h.rooms[client.rid][client] = true
+	h.Rooms[client.rid][client] = true
 }
 
 func (h *DanmuHub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			fmt.Printf("register %+v %d \n", *client, len(h.clients))
 			go h.joinClient(client)
 		case client := <-h.unregister:
-			fmt.Printf("client unregister %+v \n", *client)
 			go h.removeDanmuHubClient(client)
 		case broadcast := <-h.Broadcast:
-			fmt.Printf("broadcast %+v \n", *broadcast)
 			go h.sendBroadCast(broadcast)
 		}
 	}

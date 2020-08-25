@@ -82,12 +82,15 @@ class DanmuLocust(HttpUser):
     def on_quit(self):
         self.ws.close()
 
+#     @task
+#     def sent(self):
+#         data = {
+#             'uid': self.uid,
+#             'rid': self.rid,
+#             'content': 'test',
+#             'color': 'red'
+#         }
+#         self.client.post("/danmu/send", json=data)
     @task
-    def sent(self):
-        data = {
-            'uid': self.uid,
-            'rid': self.rid,
-            'content': 'test',
-            'color': 'red'
-        }
-        self.client.post("/danmu/send", json=data)
+    def do_nothing(self):
+        pass

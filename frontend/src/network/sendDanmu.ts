@@ -12,3 +12,11 @@ export const sendDanmuToServer = async (item: IDanmuData) => {
 
   return res
 };
+
+export const getOnlineUser = async (rid: string) => {
+  const res = await fetch(`${getOneServer()}danmu/online/${rid}`, {
+    method: "GET"
+  });
+
+  return res
+}

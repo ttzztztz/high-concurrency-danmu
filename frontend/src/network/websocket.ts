@@ -16,6 +16,8 @@ export const connectToWebsocket = (
 
   socket.onmessage = (message: any) => {
     const { data } = message;
+
+    // todo: 粘包问题
     try {
       danmuHandler(JSON.parse(data));
     } catch (e) {

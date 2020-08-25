@@ -2,7 +2,7 @@ import React from "react";
 
 import "./Video.css";
 import { IDanmuItem, IDanmuBroadCastItem } from "./types/type";
-import { sendDanmuToServer } from "./network/sendDanmu";
+import { sendDanmuToServer, getOnlineUser } from "./network/sendDanmu";
 import { connectToWebsocket } from "./network/websocket";
 import {
   FormControl,
@@ -28,7 +28,10 @@ class Video extends React.Component {
     uid: "1",
     rid: "1",
 
+    onlines: 0,
+
     danmuOpen: false,
+    onlineOpen: false,
   };
 
   danmuContainerRef: HTMLDivElement | null = null;
@@ -121,11 +124,34 @@ class Video extends React.Component {
 
   componentWillUnmount() {
     this.closeWs();
+    this.onlineHandler && clearInterval(this.onlineHandler);
   }
 
   componentDidMount() {
     // this.openWs();
   }
+
+  onlineHandler: NodeJS.Timeout | undefined = undefined;
+  handleOnlineToggle = () => {
+    const { onlineOpen, rid } = this.state;
+    if (onlineOpen) {
+      this.onlineHandler && clearInterval(this.onlineHandler);
+      this.onlineHandler = undefined;
+    } else {
+      this.onlineHandler = setInterval(async () => {
+        const res = await getOnlineUser(rid);
+        const res_json = await res.json();
+        console.log('onlines: ', res_json.message)
+        this.setState({
+          onlines: res_json.message,
+        });
+      }, 5000);
+    }
+
+    this.setState({
+      onlineOpen: !onlineOpen,
+    });
+  };
 
   handleDanmuToggle = () => {
     const { danmuOpen } = this.state;
@@ -141,10 +167,19 @@ class Video extends React.Component {
   };
 
   render() {
-    const { danmuContent, danmuColor, uid, rid, danmuOpen } = this.state;
+    const {
+      danmuContent,
+      danmuColor,
+      uid,
+      rid,
+      danmuOpen,
+      onlineOpen,
+      onlines,
+    } = this.state;
 
     return (
       <div className="App">
+        {onlineOpen && <div className="online-container">{onlines} 人在线</div>}
         <div className="video">
           <video controls className="video-component" src={VIDRO_URL}></video>
           <div
@@ -226,6 +261,17 @@ class Video extends React.Component {
               />
             }
             label="开启弹幕"
+          />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={onlineOpen}
+                onChange={this.handleOnlineToggle}
+                color="primary"
+              />
+            }
+            label="在线人数"
           />
         </div>
         <div>
