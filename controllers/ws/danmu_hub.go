@@ -218,7 +218,7 @@ func (h *DanmuHub) joinClient(client *Client) {
 		} else {
 			room = _room
 		}
-		h.mu.RUnlock()
+		h.mu.Unlock()
 	}
 
 	room.Set(client, 1)
