@@ -123,7 +123,7 @@ func ServeDanmuWs(danmuHub *DanmuHub) func(*gin.Context) {
 		}
 
 		client := &Client{
-			hub: danmuHub,
+			hub:  danmuHub,
 			conn: conn,
 			send: make(chan []byte, 256),
 			rid:  uint32(rid),
@@ -149,17 +149,17 @@ type HubBroadcastMessage struct {
 }
 
 type DanmuHub struct {
-	Rooms      map[uint32]map[*Client]bool
+	Rooms      map[uint32]ConcurrentMap
 	Broadcast  chan *HubBroadcast
 	register   chan *Client
 	unregister chan *Client
 
-	mu      sync.RWMutex
+	mu sync.RWMutex
 }
 
 func NewDanmuHub() *DanmuHub {
 	danmuHub = &DanmuHub{
-		Rooms:      make(map[uint32]map[*Client]bool),
+		Rooms:      make(map[uint32]ConcurrentMap),
 		Broadcast:  make(chan *HubBroadcast, 128),
 		register:   make(chan *Client, 128),
 		unregister: make(chan *Client, 128),
@@ -169,19 +169,21 @@ func NewDanmuHub() *DanmuHub {
 }
 
 func (h *DanmuHub) removeDanmuHubClient(client *Client) {
-	h.mu.Lock()
-	defer h.mu.Unlock()
+	h.mu.RLock()
+	room := h.Rooms[client.rid]
+	h.mu.RUnlock()
 
-	delete(h.Rooms[client.rid], client)
-	if len(h.Rooms[client.rid]) == 0 {
-		delete(h.Rooms, client.rid)
+	room.Remove(client)
+	if room.IsEmpty() {
+		h.mu.Lock()
+		if room.IsEmpty() {
+			delete(h.Rooms, client.rid)
+		}
+		h.mu.Unlock()
 	}
 }
 
 func (h *DanmuHub) sendBroadCast(broadcast *HubBroadcast) {
-	h.mu.RLock()
-	defer h.mu.RUnlock()
-
 	jsonByte, err := json.Marshal(HubBroadcastMessage{
 		Content: broadcast.Content,
 		Color:   broadcast.Color,
@@ -192,21 +194,34 @@ func (h *DanmuHub) sendBroadCast(broadcast *HubBroadcast) {
 		return
 	}
 
-	if _, ok := h.Rooms[broadcast.Rid]; ok {
-		for client := range h.Rooms[broadcast.Rid] {
+	h.mu.RLock()
+	room, ok := h.Rooms[broadcast.Rid]
+	h.mu.RUnlock()
+
+	if ok {
+		room.IterCb(func(client *Client, _ interface{}) {
 			client.send <- jsonByte
-		}
+		})
 	}
 }
 
 func (h *DanmuHub) joinClient(client *Client) {
-	h.mu.Lock()
-	defer h.mu.Unlock()
+	h.mu.RLock()
+	room, ok := h.Rooms[client.rid]
+	h.mu.RUnlock()
 
-	if _, ok := h.Rooms[client.rid]; !ok {
-		h.Rooms[client.rid] = make(map[*Client]bool)
+	if !ok {
+		h.mu.Lock()
+		if _room, ok := h.Rooms[client.rid]; !ok {
+			room = MakeConcurrentHashmap()
+			h.Rooms[client.rid] = room
+		} else {
+			room = _room
+		}
+		h.mu.RUnlock()
 	}
-	h.Rooms[client.rid][client] = true
+
+	room.Set(client, 1)
 }
 
 func (h *DanmuHub) Run() {
