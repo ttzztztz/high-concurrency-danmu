@@ -2,15 +2,15 @@ package ws
 
 import (
 	"danmu/protobuf"
-	"fmt"
 	"github.com/golang/protobuf/proto"
+	"log"
 )
 
 func PublishDanmu(buf []byte) {
 	message := &protobuf.DanmuInternalMessage{}
 	err := proto.Unmarshal(buf, message)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 

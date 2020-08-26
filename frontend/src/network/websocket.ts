@@ -16,18 +16,23 @@ export const connectToWebsocket = (
 
   socket.onmessage = (message: any) => {
     const { data } = message;
-
-    // todo: 粘包问题
-    try {
-      danmuHandler(JSON.parse(data));
-    } catch (e) {
-      console.error(e, data)
+    if (typeof data === "string") {
+      data.split("\u0000")
+        .filter((item) => item.length > 0)
+        .forEach((item) => {
+          try {
+            const data = JSON.parse(item);
+            danmuHandler(data);
+          } catch (e) {
+            console.error(e, item);
+          }
+        });
     }
   };
 
   socket.onerror = (err: any) => {
     console.error("socket err", err);
-    errHandler(err)
+    errHandler(err);
   };
 
   return socket;

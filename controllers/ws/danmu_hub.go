@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
@@ -61,25 +60,25 @@ func (c *Client) writePump() {
 
 			if !ok {
 				if err := c.conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
-					fmt.Println(err)
+					log.Println(err)
 				}
 				return
 			}
 
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 				return
 			}
 
 			if _, err := w.Write(message); err != nil {
-				fmt.Println(err)
+				log.Println(err)
 			}
 
 			n := len(c.send)
 			for i := 0; i < n; i++ {
 				if _, err := w.Write(<-c.send); err != nil {
-					fmt.Println(err)
+					log.Println(err)
 				}
 			}
 
@@ -88,11 +87,11 @@ func (c *Client) writePump() {
 			}
 		case <-ticker.C:
 			if err := c.conn.SetWriteDeadline(time.Now().Add(WriteWait)); err != nil {
-				fmt.Println(err)
+				log.Println(err)
 				return
 			}
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				fmt.Println(err)
+				log.Println(err)
 				return
 			}
 		}
@@ -105,19 +104,19 @@ func ServeDanmuWs(danmuHub *DanmuHub) func(*gin.Context) {
 
 		rid, err := strconv.ParseUint(_rid, 10, 32)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
 
 		uid, err := strconv.ParseUint(_uid, 10, 32)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
 
 		conn, err := Upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
 
@@ -200,10 +199,11 @@ func (h *DanmuHub) sendBroadCast(broadcast *HubBroadcast) {
 	})
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
+	jsonByte = append(jsonByte, 0)
 	h.mu.RLock()
 	room, ok := h.Rooms[broadcast.Rid]
 	h.mu.RUnlock()
