@@ -17,7 +17,13 @@ func Online(c *gin.Context) {
 		return
 	}
 
-	online := len(ws.SocketHub.DanmuHub.Rooms[uint32(rid)])
+	room := ws.SocketHub.DanmuHub.GetRoom(uint32(rid))
+	online := 0
+	if room == nil {
+		online = 0
+	} else {
+		online = room.Count()
+	}
 	c.JSON(200, gin.H{
 		"code":    200,
 		"message": online,

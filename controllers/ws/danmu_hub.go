@@ -155,6 +155,18 @@ type DanmuHub struct {
 	mu sync.RWMutex
 }
 
+func (h *DanmuHub) GetRoom(rid uint32) ConcurrentMap {
+	h.mu.RLock()
+	room, ok := h.Rooms[rid]
+	h.mu.RUnlock()
+
+	if ok {
+		return room
+	} else {
+		return nil
+	}
+}
+
 func NewDanmuHub() *DanmuHub {
 	danmuHub = &DanmuHub{
 		Rooms:      make(map[uint32]ConcurrentMap),

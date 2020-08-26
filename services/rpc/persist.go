@@ -14,7 +14,7 @@ func PersistDanmu(buf []byte) {
 		return
 	}
 
-	danmuRequest := protobuf.DanmuRequest{
+	danmuRequest := &protobuf.DanmuRequest{
 		Uid:     message.Uid,
 		RoomId:  message.Rid,
 		Visible: true,
