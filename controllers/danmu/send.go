@@ -7,9 +7,16 @@ import (
 	"danmu/services/sensitive"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
+	"log"
+	"time"
 )
 
 const openSensitiveWordFilter = false
+
+func logStaticData(timestamp int64) {
+	diff := time.Now().UnixNano() / 1e6 - timestamp
+	log.Printf("[PERFORMANCE] reveived danmu %dms \n", diff)
+}
 
 func Send(c *gin.Context) {
 	sendDanmuForm := forms.SendDanmuForm{}
@@ -30,6 +37,10 @@ func Send(c *gin.Context) {
 		})
 
 		return
+	}
+
+	if sendDanmuForm.Time > 0 {
+		go logStaticData(sendDanmuForm.Time)
 	}
 
 	message := &protobuf.DanmuInternalMessage{

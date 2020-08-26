@@ -20,6 +20,8 @@ import ColorizeIcon from "@material-ui/icons/Colorize";
 const VIDRO_URL =
   "https://s1.pstatp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4";
 
+let send_timestamp: { [key: string]: number | undefined } = {};
+
 class Video extends React.Component {
   state = {
     danmuContent: "",
@@ -29,7 +31,6 @@ class Video extends React.Component {
     rid: "1",
 
     // onlines: 0,
-
     danmuOpen: false,
     // onlineOpen: false,
   };
@@ -38,11 +39,22 @@ class Video extends React.Component {
   colorPickerButtonRef: HTMLInputElement | null = null;
 
   addDanmu = (danmu: IDanmuBroadCastItem) => {
+    const start_timestamp = send_timestamp[danmu.content];
+    const now_timestamp = Date.now();
+    if (start_timestamp) {
+      console.log(
+        `[PERFORMANCE] send and receive danmu ${
+          now_timestamp - start_timestamp
+        }ms`,
+        danmu
+      );
+      delete send_timestamp[danmu.content];
+    }
+
     requestAnimationFrame(() => {
       const danmuNode = document.createElement("div");
       danmuNode.classList.add("danmu-item");
       danmuNode.onanimationend = () => {
-        console.log("removed ", danmu);
         requestAnimationFrame(() => {
           this.danmuContainerRef?.removeChild(danmuNode);
         });
@@ -52,8 +64,6 @@ class Video extends React.Component {
       //   danmuNode.style.willChange = "transform";
       danmuNode.innerText = danmu.content;
       this.danmuContainerRef?.appendChild(danmuNode);
-
-      console.log("added ", danmu);
     });
   };
 
@@ -75,12 +85,13 @@ class Video extends React.Component {
       color: this.state.danmuColor,
     };
 
+    send_timestamp[danmu.content] = Date.now();
     sendDanmuToServer({
       ...danmu,
       uid: +uid,
       rid: +rid,
+      time: Date.now()
     });
-    console.log("send danmu", danmu);
   };
 
   sendDanmuDirectly = () => {
@@ -93,7 +104,6 @@ class Video extends React.Component {
   };
 
   socket: WebSocket | null = null;
-
   openWs = () => {
     const { uid, rid } = this.state;
     this.socket = connectToWebsocket(
@@ -125,6 +135,7 @@ class Video extends React.Component {
   componentWillUnmount() {
     this.closeWs();
     this.onlineHandler && clearInterval(this.onlineHandler);
+    send_timestamp = {};
   }
 
   componentDidMount() {

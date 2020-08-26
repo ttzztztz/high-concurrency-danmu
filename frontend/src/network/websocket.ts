@@ -17,7 +17,8 @@ export const connectToWebsocket = (
   socket.onmessage = (message: any) => {
     const { data } = message;
     if (typeof data === "string") {
-      data.split("\u0000")
+      data
+        .split("\u0000")
         .filter((item) => item.length > 0)
         .forEach((item) => {
           try {

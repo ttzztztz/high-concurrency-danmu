@@ -9,6 +9,7 @@ export interface IDanmuData {
   color: string;
   uid: number;
   rid: number;
+  time: number;
 }
 
 export interface IDanmuBroadCastItem {

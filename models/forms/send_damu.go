@@ -5,4 +5,5 @@ type SendDanmuForm struct {
 	Rid     uint32 `json:"rid" binding:"required"`
 	Content string `json:"content" binding:"required"`
 	Color   string `json:"color" binding:"required"`
+	Time    int64  `json:"time"`
 }
