@@ -16,13 +16,13 @@ func init() {
 	devEnv := os.Getenv("DEV")
 	if devEnv == "1" {
 		Broker = []string{
-			"kafka:9092",
-		}
-	} else {
-		Broker = []string{
 			"localhost:9092",
 			"localhost:9093",
 			"localhost:9094",
+		}
+	} else {
+		Broker = []string{
+			"kafka:9092",
 		}
 	}
 
