@@ -7,6 +7,8 @@ import (
 	"danmu/middlewares"
 	"danmu/services/kafka"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +33,12 @@ func main() {
 	ws.WebSocket(server)
 
 	go serverFrontend()
-	kafka.CreateMessageConsumer([]string{"danmu"}, "1")
+
+	rand.Seed(time.Now().UnixNano())
+	group := fmt.Sprintf("%d", rand.Int())
+	fmt.Printf("Consumer group %s\n", group)
+
+	kafka.CreateMessageConsumer([]string{"danmu"}, group)
 	err := server.Run(":8888")
 	if err != nil {
 		fmt.Println(err)

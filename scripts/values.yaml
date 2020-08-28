@@ -439,10 +439,10 @@ configJob:
 topics: 
   # - name: myExistingTopicConfig
   #   config: "cleanup.policy=compact,delete.retention.ms=604800000"
-  - name: danmu 
+  - name: danmu
     partitions: 3
     replicationFactor: 2
-    reassignPartitions: true
+    # reassignPartitions: true
   # - name: myExistingTopicPartitions
   #   partitions: 8
   # - name: myNewTopicWithConfig

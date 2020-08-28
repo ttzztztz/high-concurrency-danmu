@@ -1,1 +1,1 @@
-helm install incubator/kafka -f ./values.yaml --generate-name
+helm install kafka incubator/kafka -f ./values.yaml
