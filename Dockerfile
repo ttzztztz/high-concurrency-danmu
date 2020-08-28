@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=build /app/server /app/server
 RUN mkdir -p /app/frontend/build
 COPY --from=buildFed /app/frontend/build /app/frontend/build
+COPY ./config.json /app/config.json
 
 EXPOSE 8888
 EXPOSE 8889

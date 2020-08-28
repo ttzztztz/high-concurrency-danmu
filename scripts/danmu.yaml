@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: danmu-deployment
+spec:
+  selector:
+    matchLabels:
+      app: danmu
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: danmu
+    spec:
+      containers:
+        - name: danmu
+          image: registry.cn-hangzhou.aliyuncs.com/6rabbit/danmu:latest
+          ports:
+            - containerPort: 8889
+            - containerPort: 8888
+          env:
+            - name: SECRET
+              value: "ByteDance"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: danmu-service
+spec:
+  selector:
+    app: danmu
+  ports:
+    - name: backend
+      port: 8888
+      targetPort: 8888
+    - name: frontend
+      port: 8889
+      targetPort: 8889
