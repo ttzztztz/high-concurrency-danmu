@@ -104,7 +104,7 @@ func (d *DanmuService) AddDanmu(req *protobuf.DanmuRequest, res *protobuf.DanmuC
 		Created: time.Now(),
 	}
 
-	if _, err = db.DB.Insert(danmu); err != nil {
+	if _, err = db.DB.Table("danmu").Insert(danmu); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}

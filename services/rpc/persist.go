@@ -1,32 +1,32 @@
 package rpc
 
 import (
+	"danmu/models"
 	"danmu/protobuf"
-	"fmt"
+	"danmu/services/db"
 	"github.com/golang/protobuf/proto"
+	"log"
+	"time"
 )
 
 func PersistDanmu(buf []byte) {
 	message := &protobuf.DanmuInternalMessage{}
 	err := proto.Unmarshal(buf, message)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
-	danmuRequest := &protobuf.DanmuRequest{
+	danmu := models.Danmu{
 		Uid:     message.Uid,
-		RoomId:  message.Rid,
+		Rid:     message.Rid,
 		Visible: true,
 		Content: message.Content,
-		Color:   message.Color,
+		Created: time.Now(),
 	}
 
-	ds := &DanmuService{}
-	res := &protobuf.DanmuChangeResponse{}
-	err = ds.AddDanmu(danmuRequest, res)
-	if err != nil {
-		fmt.Println(err)
+	if _, err = db.DB.Table("danmu").Insert(&danmu); err != nil {
+		log.Println(err)
 		return
 	}
 }
