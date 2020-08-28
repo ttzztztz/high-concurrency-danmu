@@ -15,6 +15,7 @@ spec:
       containers:
         - name: danmu
           image: registry.cn-hangzhou.aliyuncs.com/6rabbit/danmu:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8889
             - containerPort: 8888
