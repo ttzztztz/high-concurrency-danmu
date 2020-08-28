@@ -30,12 +30,15 @@ kind: Service
 metadata:
   name: danmu-service
 spec:
+  type: NodePort
   selector:
     app: danmu
   ports:
     - name: backend
       port: 8888
       targetPort: 8888
+      nodePort: 31888
     - name: frontend
       port: 8889
       targetPort: 8889
+      nodePort: 31889
