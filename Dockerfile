@@ -27,6 +27,7 @@ COPY --from=build /app/server /app/server
 RUN mkdir -p /app/frontend/build
 COPY --from=buildFed /app/frontend/build /app/frontend/build
 COPY ./config.default.json /app/config.json
+COPY ./statics /app/statics
 
 EXPOSE 8888
 EXPOSE 8889
