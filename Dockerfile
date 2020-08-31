@@ -12,7 +12,7 @@ COPY . .
 RUN go build -o ./server . && chmod +x ./server
 
 # build fed stage
-FROM node:alpine AS buildFed
+FROM node:12-alpine AS buildFed
 
 WORKDIR /app
 
