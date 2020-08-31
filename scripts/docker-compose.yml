@@ -1,4 +1,6 @@
-version: '2'
+# this docker-compose runs a single node kafka for dev enviromnent
+
+version: "3.8"
 services:
   zookeeper:
     image: wurstmeister/zookeeper
