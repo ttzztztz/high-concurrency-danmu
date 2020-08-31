@@ -12,12 +12,12 @@ COPY . .
 RUN go build -o ./server . && chmod +x ./server
 
 # build fed stage
-FROM node:latest AS buildFed
+FROM node:alpine AS buildFed
 
 WORKDIR /app
 
 COPY . .
-RUN cd ./frontend && sudo yarn && sudo yarn build
+RUN cd ./frontend && yarn && yarn build
 
 # prod stage
 FROM alpine:latest AS prod
