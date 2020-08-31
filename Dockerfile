@@ -17,7 +17,7 @@ FROM node:latest AS buildFed
 WORKDIR /app
 
 COPY . .
-RUN cd ./frontend && yarn && yarn build
+RUN cd ./frontend && sudo yarn && sudo yarn build
 
 # prod stage
 FROM alpine:latest AS prod
