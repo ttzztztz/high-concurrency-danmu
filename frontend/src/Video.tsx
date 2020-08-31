@@ -44,7 +44,7 @@ class Video extends React.Component {
     if (start_timestamp) {
       console.log(
         `[PERFORMANCE] send and receive danmu ${
-          now_timestamp - start_timestamp
+        now_timestamp - start_timestamp
         }ms`,
         danmu
       );
