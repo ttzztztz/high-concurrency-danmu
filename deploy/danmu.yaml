@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: danmu
-  replicas: 2
+  replicas: 7
   template:
     metadata:
       labels:

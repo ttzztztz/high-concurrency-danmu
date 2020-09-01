@@ -18,6 +18,7 @@
 .danmu-item {
   position: absolute;
   animation: danmu-animation;
+  word-break: keep-all;
   animation-duration: 12800ms;
   animation-timing-function: linear;
   text-shadow: rgba(0, 0, 0, 0.6) 1px 0 10px;

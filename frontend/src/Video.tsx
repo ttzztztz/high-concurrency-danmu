@@ -44,7 +44,7 @@ class Video extends React.Component {
     if (start_timestamp) {
       console.log(
         `[PERFORMANCE] send and receive danmu ${
-          now_timestamp - start_timestamp
+        now_timestamp - start_timestamp
         }ms`,
         danmu
       );
@@ -61,7 +61,7 @@ class Video extends React.Component {
       };
       danmuNode.style.transform = `translateY(${~~(Math.random() * 550)}px)`;
       danmuNode.style.color = danmu.color;
-      //   danmuNode.style.willChange = "transform";
+      danmuNode.style.willChange = "transform";
       danmuNode.innerText = danmu.content;
       this.danmuContainerRef?.appendChild(danmuNode);
     });
