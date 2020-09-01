@@ -20,4 +20,6 @@ func PublishDanmu(buf []byte) {
 		Uid:     message.Uid,
 		Rid:     message.Rid,
 	}
+
+	log.Printf("[Kafka] Message Received %+v \n", message)
 }
