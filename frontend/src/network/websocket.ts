@@ -7,7 +7,8 @@ export const connectToWebsocket = (
   danmuHandler: (data: IDanmuData) => any,
   errHandler: (data: any) => any
 ) => {
-  const url = `${getOneServer().replace(/^http/, "ws")}ws/${uid}/${rid}`;
+  const url =
+      `${getOneServer().replace(/^http/, "ws")}ws/${uid}/${rid}`;
   const socket = new WebSocket(url);
 
   socket.onopen = () => {
