@@ -14,7 +14,6 @@ func PublishDanmu(buf []byte) {
 		return
 	}
 
-	log.Printf("[Kafka] Message Received %+v \n", message)
 	SocketHub.DanmuHub.Broadcast <- &HubBroadcast{
 		Content: message.Content,
 		Color:   message.Color,
