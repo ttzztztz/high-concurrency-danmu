@@ -10,16 +10,15 @@ func PublishDanmu(buf []byte) {
 	message := &protobuf.DanmuInternalMessage{}
 	err := proto.Unmarshal(buf, message)
 	if err != nil {
-		log.Println(err)
+		log.Printf("Error when publish danmu %+v \n", err)
 		return
 	}
 
+	log.Printf("[Kafka] Message Received %+v \n", message)
 	SocketHub.DanmuHub.Broadcast <- &HubBroadcast{
 		Content: message.Content,
 		Color:   message.Color,
 		Uid:     message.Uid,
 		Rid:     message.Rid,
 	}
-
-	log.Printf("[Kafka] Message Received %+v \n", message)
 }
