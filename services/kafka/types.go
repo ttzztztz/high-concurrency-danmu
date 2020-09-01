@@ -3,7 +3,6 @@ package kafka
 import (
 	"danmu/controllers/ws"
 	"danmu/services/rpc"
-	"fmt"
 	"github.com/Shopify/sarama"
 )
 
@@ -26,7 +25,6 @@ func (consumer *MessageConsumer) ConsumeClaim(session sarama.ConsumerGroupSessio
 		session.MarkMessage(message, "")
 	}
 
-	fmt.Printf("Consume clain exited \n")
 	return nil
 }
 
