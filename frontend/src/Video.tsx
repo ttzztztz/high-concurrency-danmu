@@ -52,17 +52,22 @@ class Video extends React.Component {
     }
 
     requestAnimationFrame(() => {
+      if (Date.now() - now_timestamp >= 2 * 1000) return; 
+      // optimize: if a danmu not in the screen more than 10 seconds, should not be ignored 
+
       const danmuNode = document.createElement("div");
       danmuNode.classList.add("danmu-item");
 
-      danmuNode.style.top = `${~~(Math.random() * 550)}px`;
+      const containerComputedStyle = getComputedStyle(this.danmuContainerRef!);
+      const containerWidth = containerComputedStyle.width;
+      const containerHeight = +(containerComputedStyle.height.replace('px', ''));
+
+      danmuNode.style.top = `${~~(Math.random() * (containerHeight - 24))}px`;
       danmuNode.style.color = danmu.color;
       danmuNode.innerText = danmu.content;
       this.danmuContainerRef?.appendChild(danmuNode);
 
       const danmuWidth = getComputedStyle(danmuNode).width;
-      const containerWidth = getComputedStyle(this.danmuContainerRef!).width;
-
       const animation = danmuNode.animate(
         [
           {
