@@ -9,9 +9,11 @@
 @keyframes danmu-animation {
   from {
     transform: translateX(0);
+    /* left: 800px; */
   }
   to {
     transform: translateX(-900px);
+    /* left: -100px; */
   }
 }
 
