@@ -94,6 +94,10 @@ class Video extends React.Component {
     });
   };
 
+  testLocalPressure = () => {
+    setInterval(() => this.sendDanmuDirectly(), 20);
+  }
+
   sendDanmuDirectly = () => {
     const danmu: IDanmuItem = {
       id: new Date().getTime().toString(),
@@ -286,7 +290,8 @@ class Video extends React.Component {
           /> */}
         </div>
         <div>
-          <button onClick={this.sendDanmuDirectly}>[测试] 发送本地弹幕</button>
+          <button id="test-local-danmu-send" onClick={this.sendDanmuDirectly}>[测试] 发送本地弹幕</button>
+          <button id="test-local-pressure" onClick={this.testLocalPressure}>[测试] 前端压力性能测试</button>
         </div>
       </div>
     );
