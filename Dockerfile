@@ -15,7 +15,7 @@ RUN go build -o ./server . && chmod +x ./server
 FROM node:12-alpine AS buildFed
 
 WORKDIR /app
-
+ENV BUILD="prod"
 COPY . .
 RUN cd ./frontend && yarn && yarn build
 
