@@ -255,14 +255,21 @@ type IterCb func(key *Client, v interface{})
 // Callback based iterator, cheapest way to read
 // all elements in a map.
 func (m ConcurrentMap) IterCb(fn IterCb) {
+	wg := sync.WaitGroup{}
+
 	for idx := range m {
-		shard := (m)[idx]
-		shard.RLock()
-		for key, value := range shard.items {
-			fn(key, value)
-		}
-		shard.RUnlock()
+		wg.Add(1)
+		go func(index int) {
+			shard := (m)[index]
+			shard.RLock()
+			for key, value := range shard.items {
+				fn(key, value)
+			}
+			shard.RUnlock()
+			wg.Done()
+		}(idx)
 	}
+	wg.Wait()
 }
 
 // Keys returns all keys as []*Client
