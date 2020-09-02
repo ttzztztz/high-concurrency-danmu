@@ -1,33 +1,43 @@
 .video {
   background: black;
-  height: 600px;
-  width: 800px;
   margin: 12px;
   position: relative;
 }
 
-@keyframes danmu-animation {
-  from {
-    transform: translateX(0);
-    /* left: 800px; */
+@media screen and (max-width: 650px) {
+  .video {
+    height: 62.5vw;
+    width: 100vw;
   }
-  to {
-    transform: translateX(-900px);
-    /* left: -100px; */
+
+  .danmu-switcher-container {
+    flex-flow: column;
+  }
+
+  .danmu-switcher-container > * {
+    margin: 6px 0 !important;
+  }
+}
+
+@media screen and (min-width: 650px) {
+  .video {
+    height: 50vw;
+    max-width: 800px;
+    max-height: 500px;
+    width: 80vw;
   }
 }
 
 .danmu-item {
   position: absolute;
-
-  left: 800px;
+  left: 100%;
+  
   word-break: keep-all;
   white-space: nowrap;
   text-shadow: rgba(0, 0, 0, 0.6) 1px 0 5px;
 
-  animation-name: danmu-animation;
-  animation-duration: 12s;
-  animation-timing-function: linear;
+  will-change: transform;
+  z-index: 2;
 }
 
 .danmu-container {

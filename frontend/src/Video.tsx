@@ -54,16 +54,37 @@ class Video extends React.Component {
     requestAnimationFrame(() => {
       const danmuNode = document.createElement("div");
       danmuNode.classList.add("danmu-item");
-      danmuNode.onanimationend = () => {
+
+      danmuNode.style.top = `${~~(Math.random() * 550)}px`;
+      danmuNode.style.color = danmu.color;
+      danmuNode.innerText = danmu.content;
+      this.danmuContainerRef?.appendChild(danmuNode);
+
+      const danmuWidth = getComputedStyle(danmuNode).width;
+      const containerWidth = getComputedStyle(this.danmuContainerRef!).width;
+
+      const animation = danmuNode.animate(
+        [
+          {
+            transform: `translateX(0px)`,
+            offset: 0,
+          },
+          {
+            transform: `translateX(calc(-${danmuWidth} - ${containerWidth}))`,
+            offset: 1,
+          },
+        ],
+        {
+          duration: 12000,
+          easing: 'linear'
+        }
+      );
+
+      animation.onfinish = () => {
         requestAnimationFrame(() => {
           this.danmuContainerRef?.removeChild(danmuNode);
         });
       };
-      danmuNode.style.top = `${~~(Math.random() * 550)}px`;
-      danmuNode.style.color = danmu.color;
-      danmuNode.style.willChange = "transform";
-      danmuNode.innerText = danmu.content;
-      this.danmuContainerRef?.appendChild(danmuNode);
     });
   };
 
@@ -90,13 +111,13 @@ class Video extends React.Component {
       ...danmu,
       uid: +uid,
       rid: +rid,
-      time: Date.now()
+      time: Date.now(),
     });
   };
 
   testLocalPressure = () => {
-    setInterval(() => this.sendDanmuDirectly(), 20);
-  }
+    setInterval(() => this.sendDanmuDirectly(), 200);
+  };
 
   sendDanmuDirectly = () => {
     const danmu: IDanmuItem = {
@@ -290,8 +311,12 @@ class Video extends React.Component {
           /> */}
         </div>
         <div>
-          <button id="test-local-danmu-send" onClick={this.sendDanmuDirectly}>[测试] 发送本地弹幕</button>
-          <button id="test-local-pressure" onClick={this.testLocalPressure}>[测试] 前端压力性能测试</button>
+          <button id="test-local-danmu-send" onClick={this.sendDanmuDirectly}>
+            [测试] 发送本地弹幕
+          </button>
+          <button id="test-local-pressure" onClick={this.testLocalPressure}>
+            [测试] 前端压力性能测试
+          </button>
         </div>
       </div>
     );

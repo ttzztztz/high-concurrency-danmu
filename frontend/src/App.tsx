@@ -26,7 +26,7 @@ class App extends React.Component {
         <AppBar position="fixed">
           <Toolbar variant="dense">
             <Typography variant="h6" color="inherit">
-              高性能弹幕系统
+              高性能弹幕系统 (K-01)
             </Typography>
           </Toolbar>
         </AppBar>
