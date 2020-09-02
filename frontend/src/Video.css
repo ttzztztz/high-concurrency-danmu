@@ -7,21 +7,25 @@
 }
 
 @keyframes danmu-animation {
-  0% {
-    left: 102.5%;
+  from {
+    transform: translateX(0);
   }
-  100% {
-    left: -2.5%;
+  to {
+    transform: translateX(-900px);
   }
 }
 
 .danmu-item {
   position: absolute;
-  animation: danmu-animation;
+
+  left: 800px;
   word-break: keep-all;
-  animation-duration: 12800ms;
+  white-space: nowrap;
+  text-shadow: rgba(0, 0, 0, 0.6) 1px 0 5px;
+
+  animation-name: danmu-animation;
+  animation-duration: 12s;
   animation-timing-function: linear;
-  text-shadow: rgba(0, 0, 0, 0.6) 1px 0 10px;
 }
 
 .danmu-container {

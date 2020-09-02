@@ -59,7 +59,7 @@ class Video extends React.Component {
           this.danmuContainerRef?.removeChild(danmuNode);
         });
       };
-      danmuNode.style.transform = `translateY(${~~(Math.random() * 550)}px)`;
+      danmuNode.style.top = `${~~(Math.random() * 550)}px`;
       danmuNode.style.color = danmu.color;
       danmuNode.style.willChange = "transform";
       danmuNode.innerText = danmu.content;
