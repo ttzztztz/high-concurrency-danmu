@@ -62,7 +62,8 @@ class Video extends React.Component {
       const containerWidth = containerComputedStyle.width;
       const containerHeight = +(containerComputedStyle.height.replace('px', ''));
 
-      danmuNode.style.top = `${~~(Math.random() * (containerHeight - 24))}px`;
+      const totalHeight = ~~(containerHeight / 24);
+      danmuNode.style.top = `${~~(Math.random() * totalHeight) * 24}px`;
       danmuNode.style.color = danmu.color;
       danmuNode.innerText = danmu.content;
       this.danmuContainerRef?.appendChild(danmuNode);
