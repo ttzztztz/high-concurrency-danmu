@@ -70,6 +70,6 @@ func Send(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"code": 200,
+		"code": 0,
 	})
 }
